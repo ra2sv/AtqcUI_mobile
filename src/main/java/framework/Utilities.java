@@ -8,6 +8,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import static framework.PlatformFactory.getDriver;
 import static io.appium.java_client.touch.LongPressOptions.longPressOptions;
@@ -54,14 +55,16 @@ public class Utilities {
         }
     }
     public static void elementIsNotPresent(String xpath) throws InterruptedException {
+        getDriver().manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         for (int i = 0; i <= 5; ++i) {
             if (getDriver().findElements(By.xpath(xpath)).isEmpty()) {
                 System.out.println("Element disappeared");
                 break;
             } else {
-                System.out.println("Element still visible");
+                System.out.println("Element still visible, attempt " + i);
             }
-            if(i==5) System.out.println("Element not disappeared");
+            if(i==5) System.out.println("Element not disappeared within 5 sec");
         }
+        getDriver().manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
     }
 }
